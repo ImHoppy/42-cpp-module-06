@@ -14,11 +14,15 @@ class Convert
 		Convert( void ) : _negative(false), _c('\0'), _i(0), _f(0.0f), _d(0.0) {};
 		Convert( Convert const & src ) { *this = src; };
 		Convert( std::string input ) {
+			if (input.length() == 1 && !std::isdigit(input[0]))
+			{
+				std::cout << "char\n";			
+				return ;
+			}
 			if (input[0] == '-')
 				_negative = true;	 
 			if (input[0] == '-' || input[0] == '+')
 				input = input.substr(1);
-			
 			if (_negative == false && (input == "nan" || input == "nanf"))
 				std::cout << "nan\n"; // TODO: nan convertion
 			if (input == "inf" || input == "inff")
@@ -41,9 +45,9 @@ class Convert
 					return ;
 			}
 			if (isDouble)
-				; // TODO: double convertion
+				std::cout << "double\n"; // TODO: double convertion
 			else
-				; // TODO: int convertion
+				std::cout << "int\n"; // TODO: int convertion
 		};
 		
 		~Convert( void ) {};
@@ -139,7 +143,7 @@ Convert::Type find_type(std::string str)
 			type = Convert::Type::Nan;
 			break;	
 		}
-		if (i == 0 && (c == '+' || c == '-')
+		if (i == 0 && (c == '+' || c == '-'))
 		{
 			if (c == '-')
 				negative = true;
@@ -147,9 +151,9 @@ Convert::Type find_type(std::string str)
 		}
 		if (c == 'i')
 		{
-			if (str.substr(pos) == "inf" || str.substr(pos) == "inff")
+			if (str.substr(i) == "inf" || str.substr(i) == "inff")
 				return(Convert::Type(negative, Convert::Type::Inf));
-			type = check_inf(i, str.substr);
+			// type = check_inf(i, str.substr);
 		}
 
 	}
@@ -165,6 +169,8 @@ int	main(int ac, char **av)
 	Convert::Type type;
 	if (input.length() < 1)
 		return (1);
+	Convert test(input);
+	/*
 	// if (input.length() > 1)
 	{
 		type = find_type(input);
@@ -173,6 +179,6 @@ int	main(int ac, char **av)
 	// else
 		// type = Convert::Type::Char;
 	std::cout << typeToStr(type._type) << std::endl;
-
+	*/
 	return (0);
 }
