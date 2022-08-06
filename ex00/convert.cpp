@@ -11,50 +11,55 @@ inline std::string typeToStr(int type)
 class Convert
 {
 	public:
+		enum e_type { Null, Char, Int, Float, Double, Nan, Inf};
+
 		Convert( void ) : _negative(false), _c('\0'), _i(0), _f(0.0f), _d(0.0) {};
 		Convert( Convert const & src ) { *this = src; };
-		Convert( std::string input ) {
+		e_type	DetermineType(std::string input)
+		{
 			if (input.length() == 1 && !std::isdigit(input[0]))
-			{
-				std::cout << "char\n";			
-				return ;
-			}
+				return (e_type::Char);
+			if (input == "nan" || input == "nanf")
+				return (e_type::Nan);
 			if (input[0] == '-')
-				_negative = true;	 
+				_negative = true;
 			if (input[0] == '-' || input[0] == '+')
 				input = input.substr(1);
-			if (_negative == false && (input == "nan" || input == "nanf"))
-				std::cout << "nan\n"; // TODO: nan convertion
 			if (input == "inf" || input == "inff")
-				std::cout << "inf\n"; // TODO: inf convertion
+				return (e_type::Inf);
 			
-			size_t	max = input.length();
-			bool	isDouble = false;
+			size_t	max			= input.length();
+			bool	isDouble	= false;
 			for (size_t i = 0; i < max; i++)
 			{
-				if (i == max-1 && input[i] == 'f')
-					std::cout << "float\n"; // TODO: float convertion
+				if (isDouble && i == max-1 && (input[i] == 'f' || input[i] == 'F'))
+					return (e_type::Float);
 				if (input[i] == '.')
 				{
 					if (isDouble)
-						return ;
+						return (e_type::Null);
 					isDouble = true;
 					continue ;
 				}
 				if (!std::isdigit(input[i]))
-					return ;
+					return (e_type::Null);
 			}
 			if (isDouble)
-				std::cout << "double\n"; // TODO: double convertion
+				return (e_type::Double);
 			else
-				std::cout << "int\n"; // TODO: int convertion
+				return (e_type::Int);
+		}
+		Convert( std::string input ) {
+			_type = DetermineType(input);
+			if (_type == Null)
+				return ;
 		};
 		
 		~Convert( void ) {};
-
 		Convert operator =( Convert const & src) {
 			if (this == &src)
 				return (*this);
+			this->_type = src._type;
 			this->_negative = src._negative;
 			this->_c = src._c;
 			this->_i = src._i;
@@ -62,111 +67,37 @@ class Convert
 			this->_d = src._d;
 			return (*this);
 		};
-
-
+		Convert::e_type	getType() const;
 	
 	private:
+		e_type	_type;
 		bool	_negative;
 		char	_c;
 		int		_i;
 		float	_f;
 		double	_d;
-	public:
-		class Type
-		{
-			public:
-				enum e_type { Null, Char, Int, Float, Double, Nan, Inf};
-               
-				bool		_negative;
-				enum e_type	_type;
-
-				Type( void ) : _negative(false), _type(Null) {}
-				Type( Type const & src ) : _negative(src._negative), _type(src._type) {}
-				Type( bool negative, enum e_type type ) : _negative(negative), _type(type) {}
-				Type( enum e_type type ) : _negative(false), _type(type) {}
-				Type & operator = ( const Type &a ) { if (this != &a) {_negative = a._negative; _type = a._type; } return *this; };
-				Type & operator = ( enum e_type a ) { _type = a; return *this; };
-				Type & operator = ( bool a ) { _negative = a; return *this; };
-				operator bool() const { return (_type != Null); }
-				bool operator == ( enum e_type a ) const { return (_type == a); }
-				bool operator == (bool a) const { return (_negative == a); }
-			
-		};
 };
 
-Convert::Type	check_inf(int pos, std::string str)
+Convert::e_type	Convert::getType() const
 {
-	bool negative = false;
-
-	if (str[pos] == '-')
-		negative = true;
-	if (str[pos] == '+' || str[pos] == '-')
-		pos++;
-	if (str.substr(pos) == "inf" || str.substr(pos) == "inff")
-		return(Convert::Type(negative, Convert::Type::Inf));
-	else
-	{
-		int max = str.length();
-		bool isdouble = false;
-		for (int i = pos; i < max; i++)
-		{
-			if (!isdouble && str[i] == '.')
-				isdouble = true;
-			else
-			{
-				if (i == max-1 && str[i] == 'f')
-					return (Convert::Type(negative, Convert::Type::Float));
-				if (!std::isdigit(str[i]))
-					return (Convert::Type());
-			}
-		}
-		if (isdouble)
-			return (Convert::Type(negative, Convert::Type::Double));
-		else
-			return (Convert::Type(negative, Convert::Type::Int));
-	}
-	return (Convert::Type());
+	return _type;
 }
 
-
-Convert::Type find_type(std::string str)
+std::ostream & operator<<( std::ostream & o, Convert const & src )
 {
-	Convert::Type	type;
-	char			c = 0;
-	bool			negative = false;
-
-	for (unsigned int i = 0; str[i] != '\0'; i++)
+	if (src.getType() == Convert::Null)
 	{
-		c = str[i];
-		if (i == 0 && (str.substr(i) == "nan" || str.substr(i) == "nanf"))
-		{
-			type = Convert::Type::Nan;
-			break;	
-		}
-		if (i == 0 && (c == '+' || c == '-'))
-		{
-			if (c == '-')
-				negative = true;
-			continue;
-		}
-		if (c == 'i')
-		{
-			if (str.substr(i) == "inf" || str.substr(i) == "inff")
-				return(Convert::Type(negative, Convert::Type::Inf));
-			// type = check_inf(i, str.substr);
-		}
-
+		o << "Error." << std::endl;
+		return (o);
 	}
-	return (type);
-}
-
+	return (o);
+};
 
 int	main(int ac, char **av)
 {
 	if (ac < 2)
 		return (1);
 	std::string input(av[1]);
-	Convert::Type type;
 	if (input.length() < 1)
 		return (1);
 	Convert test(input);
