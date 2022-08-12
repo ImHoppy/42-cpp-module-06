@@ -19,11 +19,38 @@ Convert::Convert( std::string input )
 	_valid = true;
 
 	if (_type == Char)
+	{
 		input = CharToString(input[0]);
-	_c = atoi(input.c_str());
-	_i = atoi(input.c_str());
-	_f = strtof(input.c_str(), NULL);
-	_d = strtod(input.c_str(), NULL);
+		_c = atoi(input.c_str());
+
+		_i = (int)_c;
+		_f = (float)_c;
+		_d = (double)_c;
+	}
+	if (_type == Int)
+	{
+		_i = atoi(input.c_str());
+
+		_c = (char)_i;
+		_f = (float)_i;
+		_d = (double)_i;
+	}
+	if (_type == Float)
+	{
+		_f = strtof(input.c_str(), NULL);
+
+		_c = (char)_f;
+		_i = (int)_f;
+		_d = (double)_f;
+	}
+	if (_type == Double || _type == Inf || _type == Nan)
+	{
+		_d = strtod(input.c_str(), NULL);
+
+		_c = (char)_d;
+		_i = (int)_d;
+		_f = (float)_d;
+	}
 };
 
 
