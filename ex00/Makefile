@@ -7,7 +7,7 @@ ifeq ($(DEBUG), 1)
 	CFLAGS		+= -DDEBUG_LOG=1
 endif
 
-SRCS		=	 convert.cpp
+SRCS		=	 convert.cpp Convert.cpp  
 
 OBJS		=	$(SRCS:.cpp=.o)
 DEPS		=	$(OBJS:.o=.d)
