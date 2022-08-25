@@ -23,33 +23,33 @@ Convert::Convert( std::string input )
 		input = CharToString(input[0]);
 		_c = atoi(input.c_str());
 
-		_i = (int)_c;
-		_f = (float)_c;
-		_d = (double)_c;
+		_i = static_cast<int>(_c);
+		_f = static_cast<float>(_c);
+		_d = static_cast<double>(_c);
 	}
 	if (_type == Int)
 	{
 		_i = atoi(input.c_str());
 
-		_c = (char)_i;
-		_f = (float)_i;
-		_d = (double)_i;
+		_c = static_cast<char>(_i);
+		_f = static_cast<float>(_i);
+		_d = static_cast<double>(_i);
 	}
 	if (_type == Float)
 	{
 		_f = strtof(input.c_str(), NULL);
 
-		_c = (char)_f;
-		_i = (int)_f;
-		_d = (double)_f;
+		_c = static_cast<char>(_f);
+		_i = static_cast<int>(_f);
+		_d = static_cast<double>(_f);
 	}
 	if (_type == Double || _type == Inf || _type == Nan)
 	{
 		_d = strtod(input.c_str(), NULL);
 
-		_c = (char)_d;
-		_i = (int)_d;
-		_f = (float)_d;
+		_c = static_cast<char>(_d);
+		_i = static_cast<int>(_d);
+		_f = static_cast<float>(_d);
 	}
 };
 
@@ -128,7 +128,7 @@ void	Convert::displayConvert(void) const
 {
 	if (_type == Null)
 	{
-		std::cerr << "conversion not possible\n";
+		std::cerr << "Error.\n";
 		return ;
 	}
 	std::cout << "char: ";
