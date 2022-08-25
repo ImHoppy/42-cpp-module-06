@@ -6,7 +6,7 @@
 
 #define PURPLE(A) "\033[35m" << A << "\033[0m"
 
-Base *	generate()
+Base *	generate( void )
 {
 	int random = rand() % 3;
 	std::cout << PURPLE("Generate... ") << (random?(random==1?"B":"C"):"A") << std::endl;
@@ -47,7 +47,7 @@ void	identify(Base & p)
 {
 	try
 	{
-		dynamic_cast<A &>(p);
+		(void)dynamic_cast<A &>(p);
 		std::cout << "A"; 
 		return ;
 	}
@@ -56,7 +56,7 @@ void	identify(Base & p)
 
 	try
 	{
-		dynamic_cast<B &>(p);
+		(void)dynamic_cast<B &>(p);
 		std::cout << "B"; 
 		return ;
 	}
@@ -65,7 +65,7 @@ void	identify(Base & p)
 
 	try
 	{
-		dynamic_cast<C &>(p);
+		(void)dynamic_cast<C &>(p);
 		std::cout << "C"; 
 		return ;
 	}
