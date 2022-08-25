@@ -123,7 +123,6 @@ Convert::e_type	Convert::DetermineType(std::string input)
 		return (Int);
 }
 
-
 void	Convert::displayConvert(void) const
 {
 	if (_type == Null)
@@ -133,9 +132,9 @@ void	Convert::displayConvert(void) const
 	}
 	std::cout << "char: ";
 	if (std::isprint(_c))
-		std::cout << "'" << _c << "'";
+		std::cout << '\'' << _c << '\'';
 	else
-		std::cout << ((_type == Nan || _type == Inf) ? "impossible" : "Non displayble");
+		std::cout << ((_type == Nan || _type == Inf) ? "impossible" : "Non displayable");
 	std::cout << std::endl;
 	std::cout << "int: ";
 	if (_type == Nan || _type == Inf)
