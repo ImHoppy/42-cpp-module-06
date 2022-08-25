@@ -143,8 +143,8 @@ void	Convert::displayConvert(void) const
 	else
 		std::cout << _i;
 	std::cout << std::endl;
-	std::cout << "float: " << std::fixed << std::setprecision(1) << _f << "f" << std::endl;
-	std::cout << "double: " << _d << std::endl;
+	std::cout << "float: " << _f << (static_cast<float>(_i) == _f ? ".0f" : "f") << std::endl;
+	std::cout << "double: " << _d << (static_cast<double>(_i) == _f ? ".0" : "") << std::endl;
 	
 }
 
