@@ -13,11 +13,11 @@ Base *	generate( void )
 	switch (random)
 	{
 		case 0:
-			return ((Base*)new A);	
+			return (static_cast<Base*>(new A));
 		case 1:
-			return ((Base*)new B);	
+			return (static_cast<Base*>(new B));
 		case 2:
-			return ((Base*)new C);	
+			return (static_cast<Base*>(new C));
 	}
 	return NULL;
 }
